@@ -47,7 +47,7 @@
 export default {
   data() {
     return {
-      todoList: [{header: '', text: ''}],
+      todoList: [{header: 'пусто', text: 'текст'}],
       isLoading: false,
       showModal: false,
       mainIndex: 0,
@@ -58,7 +58,7 @@ export default {
       if (!this.todoList) {
         return;
       }
-      this.todoList.push({header: '346', text: 'text'})
+      this.todoList.push({header: 'пусто', text: 'текст'})
       this.saveTodoList()
     },
     confirmNewTodo(index){

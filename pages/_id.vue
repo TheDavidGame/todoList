@@ -1,6 +1,6 @@
 <template>
     <div v-if="isLoading">
-        <div class = "borderElem" contenteditable="true">
+        <div class = "borderElem" contenteditable="true" id="demo">
             <h1>{{todoElem.header}}</h1>
             <h2>{{todoElem.text}}</h2>
         </div>
@@ -18,7 +18,7 @@ export default {
     data () {
         return {
            isLoading: false,
-           elem: [],
+           arrayTodo: [],
            todoElem: {}
         }
     },
@@ -26,15 +26,22 @@ export default {
         validLocalStorage () {
           if (localStorage.getItem('todoList')) {
             try {
-                this.elem = JSON.parse(localStorage.getItem('todoList'));
+                this.arrayTodo = JSON.parse(localStorage.getItem('todoList'));
             } catch(e) {
                 localStorage.removeItem('todoList');
             }
-            this.todoElem = this.elem[this.id]
+            this.todoElem = this.arrayTodo[this.id]
           }
         },
         saveTodo(){
-            const parsed = JSON.stringify(this.todoElem);
+            
+            // console.log(this.todoElem)
+            
+            let header = document.getElementById('demo').children[0].innerHTML.substring(0, 10)
+            let text = document.getElementById('demo').children[1].innerHTML
+            let elemTodo = {header, text}
+            this.arrayTodo.splice(this.id, 1, elemTodo)
+            const parsed = JSON.stringify(this.arrayTodo);
             localStorage.setItem('todoList', parsed);
         }
     },
