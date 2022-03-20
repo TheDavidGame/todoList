@@ -2,14 +2,21 @@
     <div v-if="isLoading">
         <div class = "borderElem" contenteditable="true" id="demo">
             <h1>{{todoElem.header}}</h1>
-            <h2>{{todoElem.text}}</h2>
+            <!-- <h2>{{todoElem.text}}</h2> -->
+            <ul id="list"></ul>
         </div>
         <div style="margin-top:20px">
             <div>
                 <button @click="saveTodo()" class="greenButtonElem" >Сохранить</button>
             </div>
             <div>
-                <button @click="completed()" class="greenButtonElem" >Отметить как выполненный</button>
+                <button @click="addCheckbox" id="ButtonAdd" class="greenButtonElem" >Добавить пункт</button>
+            </div>
+            <div>
+                <input type="text" name="" id="inputText" placeholder="Содержание пункта" style="float: right;margin-right:30px">
+            </div>
+            <div>
+                <button @click="deleteCheckbox" id="ButtonRemove" class="greenButtonElem" >Удалить пункт</button>
             </div>
         </div>
     </div>
@@ -29,6 +36,25 @@ export default {
         }
     },
     methods: {
+        addCheckbox() {
+            var inputText = document.getElementById("inputText")
+            var list = document.getElementById('list')
+            var check = document.createElement("input")
+            check.type = "checkbox"
+            check.addEventListener("click", function(e) {
+              console.log(text.textContent)
+            });
+            var text = document.createElement("span")
+            text.textContent = inputText.value
+            var label1 = document.createElement('label')
+            label1.appendChild(check)
+            label1.appendChild(text)
+            list.appendChild(label1)
+        },
+        deleteCheckbox() {
+            var checks = document.querySelectorAll("#list input[type=checkbox]:checked")
+            checks.forEach(item => item.parentNode.parentNode.removeChild(item.parentNode))
+        },
         // проверка на наличие данный в local storage
         validLocalStorage() {
           if (localStorage.getItem('todoList')) {
@@ -43,15 +69,18 @@ export default {
         //сохранение в local storage
         saveTodo() {
             let header = document.getElementById('demo').children[0].innerHTML.substring(0, 10)
-            let text = document.getElementById('demo').children[1].innerHTML
-            let elemTodo = {header, text}
-            this.arrayTodo.splice(this.id, 1, elemTodo)
-            const parsed = JSON.stringify(this.arrayTodo);
-            localStorage.setItem('todoList', parsed);
+            let numChild = document.getElementById('demo').querySelector("#list").childNodes.length
+            let array = []
+            for(let i = 0; i < numChild; i++){
+               array.push(document.getElementById('demo').querySelector("#list").children[i].children[1].innerHTML)
+            }
+            // console.log(array)
+            // let text = document.getElementById('demo').children[1].innerHTML
+            // let elemTodo = {header, text}
+            // this.arrayTodo.splice(this.id, 1, elemTodo)
+            // const parsed = JSON.stringify(this.arrayTodo);
+            // localStorage.setItem('todoList', parsed);
         },
-        completed() {
-            
-        }
     },
 
     computed: {
