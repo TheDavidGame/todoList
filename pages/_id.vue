@@ -1,9 +1,14 @@
 <template>
     <div v-if="isLoading">
-        <div class = "borderElem" contenteditable="true" id="demo">
-            <h1>{{todoElem.header}}</h1>
-            <!-- <h2>{{todoElem.text}}</h2> -->
-            <ul id="list"></ul>
+        <div class = "borderElem"  id="demo">
+            <h1 contenteditable="true">{{todoElem.header}}</h1>
+                <ul id="list" contenteditable="true">
+                    <label v-for="(todo, i) in todoElem.text" :key="i" class = "styleCheckboxTodo">
+                        <input v-if="todo.checkbox" type="checkbox" checked>
+                        <input v-else type="checkbox">
+                        <span>{{todo.main}}</span>
+                    </label>
+                </ul> 
         </div>
         <div style="margin-top:20px">
             <div>
@@ -47,6 +52,7 @@ export default {
             var text = document.createElement("span")
             text.textContent = inputText.value
             var label1 = document.createElement('label')
+            label1.classList.add("styleCheckboxTodo")
             label1.appendChild(check)
             label1.appendChild(text)
             list.appendChild(label1)
@@ -70,16 +76,24 @@ export default {
         saveTodo() {
             let header = document.getElementById('demo').children[0].innerHTML.substring(0, 10)
             let numChild = document.getElementById('demo').querySelector("#list").childNodes.length
-            let array = []
-            for(let i = 0; i < numChild; i++){
-               array.push(document.getElementById('demo').querySelector("#list").children[i].children[1].innerHTML)
+            let text = []
+            
+            for(let i = 0; i < numChild; i++) {
+                try {
+                text.push({
+                        main: document.getElementById('demo').querySelector("#list").children[i].children[1].innerHTML,
+                        checkbox: document.getElementById('demo').querySelector("#list").children[i].children[0].checked,
+                    })
+                
+                } catch(e) {
+                    console.log("Пустой пункт")
+                }
             }
-            // console.log(array)
-            // let text = document.getElementById('demo').children[1].innerHTML
-            // let elemTodo = {header, text}
-            // this.arrayTodo.splice(this.id, 1, elemTodo)
-            // const parsed = JSON.stringify(this.arrayTodo);
-            // localStorage.setItem('todoList', parsed);
+
+            let elemTodo = {header, text}
+            this.arrayTodo.splice(this.id, 1, elemTodo)
+            const parsed = JSON.stringify(this.arrayTodo);
+            localStorage.setItem('todoList', parsed);
         },
     },
 
@@ -130,5 +144,9 @@ export default {
     text-decoration: none;
     font-size: 16px;
     margin-right: 50px;
+}
+.styleCheckboxTodo {
+    display: flex; 
+    align-items: center;
 }
 </style>
